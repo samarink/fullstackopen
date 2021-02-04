@@ -14,15 +14,36 @@ const App = ({ anecdotes }) => {
     setScores(copy);
   };
 
+  const mostVotes = scores.indexOf(Math.max(...scores));
+
   return (
-    <div>
-      <p>{anecdotes[selected]}</p>
-      <p>Has {scores[selected]} votes</p>
+    <>
+      <Anecdote
+        headline="Anecdote of the day"
+        anecdote={anecdotes[selected]}
+        votes={scores[selected]}
+      />
+      <Anecdote
+        headline="Anecdote with most votes"
+        anecdote={anecdotes[mostVotes]}
+        votes={scores[mostVotes]}
+      />
       <Button text="next anecdote" handleClick={nextAnecdote} />
-      <Button text="vote for anecdote" handleClick={() => voteForAnecdote(selected)} />
-    </div>
+      <Button
+        text="vote for anecdote"
+        handleClick={() => voteForAnecdote(selected)}
+      />
+    </>
   );
 };
+
+const Anecdote = ({ headline, anecdote, votes }) => (
+  <>
+    <h2>{headline}</h2>
+    <p>{anecdote}</p>
+    <p>Has {votes} votes</p>
+  </>
+);
 
 const Button = ({ text, handleClick }) => (
   <button onClick={handleClick}>{text}</button>
