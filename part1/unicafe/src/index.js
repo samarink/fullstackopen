@@ -39,13 +39,19 @@ const App = () => {
 const Statistics = ({ good, neutral, bad, total, average, positive }) => (
   <>
     <h2>Statistics</h2>
-    <p>Good: {good}</p>
-    <p>Neutral: {neutral}</p>
-    <p>Bad: {bad}</p>
-    <p>All {total}</p>
-    <p>Average {average || 0}</p>
-    <p>Positive {positive || 0}%</p>
+    <Statistic text="Good" value={good} />
+    <Statistic text="Neutral" value={neutral} />
+    <Statistic text="Bad" value={bad} />
+    <Statistic text="All" value={total} />
+    <Statistic text="Average" value={average || 0} />
+    <Statistic text="Positive" value={(positive || 0) + '%'} />
   </>
+);
+
+const Statistic = ({ text, value }) => (
+  <p>
+    {text} {value}
+  </p>
 );
 
 const Button = ({ handleClick, text }) => (
