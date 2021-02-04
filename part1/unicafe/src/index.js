@@ -37,21 +37,28 @@ const App = () => {
 };
 
 const Statistics = ({ good, neutral, bad, total, average, positive }) => (
-  <>
-    <h2>Statistics</h2>
-    <Statistic text="Good" value={good} />
-    <Statistic text="Neutral" value={neutral} />
-    <Statistic text="Bad" value={bad} />
-    <Statistic text="All" value={total} />
-    <Statistic text="Average" value={average || 0} />
-    <Statistic text="Positive" value={(positive || 0) + '%'} />
-  </>
+  <table>
+    <thead>
+      <tr>
+        <td>Statistics</td>
+      </tr>
+    </thead>
+    <tbody>
+      <Statistic text="Good" value={good} />
+      <Statistic text="Neutral" value={neutral} />
+      <Statistic text="Bad" value={bad} />
+      <Statistic text="All" value={total} />
+      <Statistic text="Average" value={average || 0} />
+      <Statistic text="Positive" value={(positive || 0) + '%'} />
+    </tbody>
+  </table>
 );
 
 const Statistic = ({ text, value }) => (
-  <p>
-    {text} {value}
-  </p>
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 );
 
 const Button = ({ handleClick, text }) => (
