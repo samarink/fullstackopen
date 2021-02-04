@@ -20,14 +20,18 @@ const App = () => {
       <Button handleClick={incrementGood} text="Good" />
       <Button handleClick={incrementNeutral} text="Neutral" />
       <Button handleClick={incrementBad} text="Bad" />
-      <Statistics
-        good={good}
-        neutral={neutral}
-        bad={bad}
-        total={total}
-        average={average}
-        positive={positive}
-      />
+      {total > 0 ? (
+        <Statistics
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          total={total}
+          average={average}
+          positive={positive}
+        />
+      ) : (
+        <p>No feedback given</p>
+      )}
     </>
   );
 };
