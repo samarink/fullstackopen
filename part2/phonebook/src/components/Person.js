@@ -1,6 +1,6 @@
-const Person = ({ name, phone }) => (
+const Person = ({ name, number }) => (
   <li>
-    {name} {phone}
+    {name} {number}
   </li>
 );
 
