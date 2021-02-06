@@ -9,8 +9,9 @@ function App() {
 
   const urlbase = 'https://restcountries.eu/rest/v2';
 
-  useEffect(() =>
-    axios.get(`${urlbase}/all`).then(({ data }) => setCountries(data))
+  useEffect(
+    () => axios.get(`${urlbase}/all`).then(({ data }) => setCountries(data)),
+    []
   );
 
   const handleSearchChange = (e) => setSearch(e.target.value);
