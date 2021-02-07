@@ -16,8 +16,14 @@ const remove = (id) => {
   return req.then((res) => res.data);
 };
 
+const update = (id, newPerson) => {
+  const req = axios.put(`${baseurl}/${id}`, newPerson);
+  return req.then((res) => res.data);
+};
+
 export default {
   getAtll,
   create,
   remove,
+  update,
 };

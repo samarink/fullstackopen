@@ -26,15 +26,21 @@ const App = () => {
   const addPerson = (e) => {
     e.preventDefault();
 
-    if (alreadyInPhonebook(newName)) {
-      alert(`${newName} is already added to the phonebook`);
-      return false;
-    }
-
     const newPersonObject = {
       name: newName,
       number: newNumber,
     };
+
+    if (alreadyInPhonebook(newName)) {
+      const message = `${newName} is already added to the phonebook, replace the old number with the new one`;
+      if (window.confirm(message)) {
+        const id = persons.find((p) => p.name === newName).id;
+        updatePerson(id, newPersonObject);
+        return;
+      } else {
+        return;
+      }
+    }
 
     personsService.create(newPersonObject).then((returnedPerson) => {
       setPersons([...persons, returnedPerson]);
@@ -49,6 +55,16 @@ const App = () => {
 
     personsService.remove(id).then(() => {
       setPersons(persons.filter((person) => person.id !== id));
+    });
+  };
+
+  const updatePerson = (id, newPerson) => {
+    personsService.update(id, newPerson).then((updatedPerson) => {
+      setPersons(
+        persons.map((person) => (person.id === id ? updatedPerson : person))
+      );
+      setNewName('');
+      setNewNumber('');
     });
   };
 
