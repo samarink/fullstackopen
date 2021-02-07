@@ -11,7 +11,13 @@ const create = (newPerson) => {
   return req.then((res) => res.data);
 };
 
+const remove = (id) => {
+  const req = axios.delete(`${baseurl}/${id}`);
+  return req.then((res) => res.data);
+};
+
 export default {
   getAtll,
   create,
+  remove,
 };

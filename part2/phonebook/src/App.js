@@ -43,6 +43,15 @@ const App = () => {
     });
   };
 
+  const deletePerson = (id) => {
+    const personName = persons.find((p) => p.id === id).name;
+    if (!window.confirm(`delete ${personName}?`)) return;
+
+    personsService.remove(id).then(() => {
+      setPersons(persons.filter((person) => person.id !== id));
+    });
+  };
+
   return (
     <>
       <h2>Phonebook</h2>
@@ -60,7 +69,11 @@ const App = () => {
         addPerson={addPerson}
       />
 
-      <Persons persons={persons} searchTerm={searchTerm} />
+      <Persons
+        persons={persons}
+        searchTerm={searchTerm}
+        handleDelete={deletePerson}
+      />
     </>
   );
 };
