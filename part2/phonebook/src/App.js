@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
-import axios from 'axios';
+import personsService from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,10 +10,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const baseurl = 'http://localhost:3001/persons';
-
   useEffect(() => {
-    axios.get(baseurl).then(({ data }) => setPersons(data));
+    personsService
+      .getAtll()
+      .then((initialPersons) => setPersons(initialPersons));
   }, []);
 
   const handleNameChange = (e) => setNewName(e.target.value);
@@ -36,8 +36,8 @@ const App = () => {
       number: newNumber,
     };
 
-    axios.post(baseurl, newPersonObject).then((response) => {
-      setPersons([...persons, response.data]);
+    personsService.create(newPersonObject).then((returnedPerson) => {
+      setPersons([...persons, returnedPerson]);
       setNewName('');
       setNewNumber('');
     });
