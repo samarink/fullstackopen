@@ -7,17 +7,17 @@ import axios from 'axios';
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
-  const [newPhone, setNewPhone] = useState('');
+  const [newNumber, setNewNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
+  const baseurl = 'http://localhost:3001/persons';
+
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(({ data }) => setPersons(data));
+    axios.get(baseurl).then(({ data }) => setPersons(data));
   }, []);
 
   const handleNameChange = (e) => setNewName(e.target.value);
-  const handlePhoneChange = (e) => setNewPhone(e.target.value);
+  const handleNumberChange = (e) => setNewNumber(e.target.value);
   const handleSearchTermChange = (e) => setSearchTerm(e.target.value);
 
   const alreadyInPhonebook = (name) =>
@@ -31,15 +31,16 @@ const App = () => {
       return false;
     }
 
-    setPersons([
-      ...persons,
-      {
-        name: newName,
-        phone: newPhone,
-      },
-    ]);
-    setNewName('');
-    setNewPhone('');
+    const newPersonObject = {
+      name: newName,
+      number: newNumber,
+    };
+
+    axios.post(baseurl, newPersonObject).then((response) => {
+      setPersons([...persons, response.data]);
+      setNewName('');
+      setNewNumber('');
+    });
   };
 
   return (
@@ -54,8 +55,8 @@ const App = () => {
       <PersonForm
         newName={newName}
         handleNameChange={handleNameChange}
-        newPhone={newPhone}
-        handlePhoneChange={handlePhoneChange}
+        newNumber={newNumber}
+        handleNumberChange={handleNumberChange}
         addPerson={addPerson}
       />
 
