@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import './index.css';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
 import personsService from './services/persons';
 
 const App = () => {
@@ -9,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     personsService
@@ -23,6 +26,16 @@ const App = () => {
   const alreadyInPhonebook = (name) =>
     persons.some((person) => person.name === name);
 
+  const resetForm = () => {
+    setNewName('');
+    setNewNumber('');
+  };
+
+  const flush = (msg) => {
+    setMessage(msg);
+    setTimeout(() => setMessage(null), 5000);
+  }
+
   const addPerson = (e) => {
     e.preventDefault();
 
@@ -33,9 +46,10 @@ const App = () => {
 
     if (alreadyInPhonebook(newName)) {
       const message = `${newName} is already added to the phonebook, replace the old number with the new one`;
+
       if (window.confirm(message)) {
-        const id = persons.find((p) => p.name === newName).id;
-        updatePerson(id, newPersonObject);
+        const person = persons.find((p) => p.name === newName);
+        updatePerson(person.id, newPersonObject);
         return;
       } else {
         return;
@@ -44,17 +58,20 @@ const App = () => {
 
     personsService.create(newPersonObject).then((returnedPerson) => {
       setPersons([...persons, returnedPerson]);
-      setNewName('');
-      setNewNumber('');
+      resetForm();
+      flush(
+        `${returnedPerson.name} has been secusfully added to the phonebook`
+      );
     });
   };
 
   const deletePerson = (id) => {
-    const personName = persons.find((p) => p.id === id).name;
-    if (!window.confirm(`delete ${personName}?`)) return;
+    const person = persons.find((p) => p.id === id);
+    if (!window.confirm(`delete ${person.name}?`)) return;
 
     personsService.remove(id).then(() => {
       setPersons(persons.filter((person) => person.id !== id));
+      flush(`${person.name} has been successfully deleted from the phonebook`);
     });
   };
 
@@ -63,14 +80,16 @@ const App = () => {
       setPersons(
         persons.map((person) => (person.id === id ? updatedPerson : person))
       );
-      setNewName('');
-      setNewNumber('');
+      resetForm();
+      flush(`${updatedPerson.name} has been updated`);
     });
   };
 
   return (
     <>
       <h2>Phonebook</h2>
+
+      <Notification message={message} />
 
       <Filter
         searchTerm={searchTerm}
