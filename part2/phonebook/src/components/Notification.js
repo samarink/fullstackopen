@@ -1,9 +1,12 @@
-const Notification = ({ message }) => {
-  if (!message) return null;
+const Notification = ({ message: {msg, success} }) => {
+  if (!msg) return null;
+
+  const result = success ? 'success' : 'error';
+  const classes = `notification ${result}`
 
   return (
-    <div className="success">
-      {message}
+    <div className={classes}>
+      {msg}
     </div>
   )
 }

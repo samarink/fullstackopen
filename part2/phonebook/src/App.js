@@ -11,7 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState({});
 
   useEffect(() => {
     personsService
@@ -31,10 +31,13 @@ const App = () => {
     setNewNumber('');
   };
 
-  const flush = (msg) => {
-    setMessage(msg);
-    setTimeout(() => setMessage(null), 5000);
-  }
+  const flush = (msg, success = true) => {
+    setMessage({
+      msg,
+      success,
+    });
+    setTimeout(() => setMessage({}), 5000);
+  };
 
   const addPerson = (e) => {
     e.preventDefault();
@@ -76,13 +79,20 @@ const App = () => {
   };
 
   const updatePerson = (id, newPerson) => {
-    personsService.update(id, newPerson).then((updatedPerson) => {
-      setPersons(
-        persons.map((person) => (person.id === id ? updatedPerson : person))
-      );
-      resetForm();
-      flush(`${updatedPerson.name} has been updated`);
-    });
+    personsService
+      .update(id, newPerson)
+      .then((updatedPerson) => {
+        setPersons(
+          persons.map((person) => (person.id === id ? updatedPerson : person))
+        );
+        resetForm();
+        flush(`${updatedPerson.name} has been updated`);
+      })
+      .catch(() => {
+        resetForm();
+        flush(`${newPerson.name} has already been deleted`, false);
+        setPersons(persons.filter((p) => p.id !== id));
+      });
   };
 
   return (
