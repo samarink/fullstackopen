@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/index.css"],"names":[],"mappings":"AAAA,cACE,YAAa,CACb,WACF,CAEA,SACE,kBAAmB,CACnB,WACF,CAEA,OACE,kBAAmB,CACnB,SACF","file":"main.2c203c52.chunk.css","sourcesContent":[".notification {\n  padding: 30px;\n  margin: 10px;\n}\n\n.success {\n  background: #d1e7dd;\n  color: green;\n}\n\n.error {\n  background: #f8d7da;\n  color: red;\n}\n"]}
