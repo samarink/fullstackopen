@@ -24,6 +24,14 @@ const persons = [
   },
 ];
 
+app.get('/info', (_, res) => {
+  const responseStr = `
+    Phonebook has info for ${persons.length} people
+    ${new Date().toGMTString()}
+  `;
+  res.send(responseStr);
+});
+
 app.get('/api/persons', (_, res) => {
   res.json(persons);
 });
