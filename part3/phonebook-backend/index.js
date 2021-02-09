@@ -30,6 +30,8 @@ const generateId = () => {
   return Math.floor(Math.random * Number.MAX_SAFE_INTEGER);
 };
 
+const alreadyInPhonebook = (name) => persons.some((p) => p.name === name);
+
 app.get('/info', (_, res) => {
   const responseStr = `
     Phonebook has info for ${persons.length} people
@@ -45,8 +47,18 @@ app.get('/api/persons', (_, res) => {
 app.post('/api/persons', (req, res) => {
   const { name, number } = req.body;
 
-  if (!name || !number) {
-    return res.status(400).json({ error: 'content is missing' });
+  if (!name) {
+    return res.status(400).json({ error: 'name must be present' });
+  }
+
+  if (!number) {
+    return res.status(400).json({ error: 'number must be present' });
+  }
+
+  if (alreadyInPhonebook(name)) {
+    return res
+      .status(400)
+      .json({ error: `${name} is alredy added to the phonebook` });
   }
 
   const person = {
