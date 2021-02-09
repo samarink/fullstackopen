@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   {
     name: 'Arto Hellas',
@@ -24,6 +26,10 @@ let persons = [
   },
 ];
 
+const generateId = () => {
+  return Math.floor(Math.random * Number.MAX_SAFE_INTEGER);
+};
+
 app.get('/info', (_, res) => {
   const responseStr = `
     Phonebook has info for ${persons.length} people
@@ -34,6 +40,23 @@ app.get('/info', (_, res) => {
 
 app.get('/api/persons', (_, res) => {
   res.json(persons);
+});
+
+app.post('/api/persons', (req, res) => {
+  const { name, number } = req.body;
+
+  if (!name || !number) {
+    return res.status(400).json({ error: 'content is missing' });
+  }
+
+  const person = {
+    id: generateId(),
+    name,
+    number,
+  };
+
+  persons = [...persons, person];
+  res.json(person);
 });
 
 app.get('/api/persons/:id', (req, res) => {
