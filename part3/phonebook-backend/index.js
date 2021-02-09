@@ -3,7 +3,12 @@ const app = express();
 const morgan = require('morgan');
 
 app.use(express.json());
-app.use(morgan('tiny'));
+morgan.token('body', (req) => JSON.stringify(req.body, null, 2));
+app.use(
+  morgan(
+    ':method :url :status :response-time ms - :res[content-length] \n:body'
+  )
+);
 
 let persons = [
   {
@@ -29,7 +34,7 @@ let persons = [
 ];
 
 const generateId = () => {
-  return Math.floor(Math.random * Number.MAX_SAFE_INTEGER);
+  return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 };
 
 const alreadyInPhonebook = (name) => persons.some((p) => p.name === name);
