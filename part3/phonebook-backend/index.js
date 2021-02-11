@@ -1,10 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
+const Person = require('./models/person');
 
 app.use(express.static('build'));
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 morgan.token('body', (req) => JSON.stringify(req.body, null, 2));
 app.use(
@@ -12,33 +14,6 @@ app.use(
     ':method :url :status :response-time ms - :res[content-length] \n:body'
   )
 );
-
-let persons = [
-  {
-    name: 'Arto Hellas',
-    number: '040-123456',
-    id: 1,
-  },
-  {
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-    id: 2,
-  },
-  {
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-    id: 3,
-  },
-  {
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-    id: 4,
-  },
-];
-
-const generateId = () => {
-  return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-};
 
 const alreadyInPhonebook = (name) => persons.some((p) => p.name === name);
 
@@ -51,7 +26,7 @@ app.get('/info', (_, res) => {
 });
 
 app.get('/api/persons', (_, res) => {
-  res.json(persons);
+  Person.find({}).then((persons) => res.json(persons));
 });
 
 app.post('/api/persons', (req, res) => {
