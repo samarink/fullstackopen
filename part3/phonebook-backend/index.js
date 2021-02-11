@@ -15,8 +15,6 @@ app.use(
   )
 );
 
-const alreadyInPhonebook = (name) => persons.some((p) => p.name === name);
-
 app.get('/info', (_, res) => {
   const responseStr = `
     Phonebook has info for ${persons.length} people
@@ -40,20 +38,9 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({ error: 'number must be present' });
   }
 
-  if (alreadyInPhonebook(name)) {
-    return res
-      .status(400)
-      .json({ error: `${name} is alredy added to the phonebook` });
-  }
+  const person = new Person({ name, number });
 
-  const person = {
-    id: generateId(),
-    name,
-    number,
-  };
-
-  persons = [...persons, person];
-  res.json(person);
+  person.save().then((savedPerson) => res.json(savedPerson));
 });
 
 app.get('/api/persons/:id', (req, res) => {
