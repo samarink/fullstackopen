@@ -59,13 +59,18 @@ const App = () => {
       }
     }
 
-    personsService.create(newPersonObject).then((returnedPerson) => {
-      setPersons([...persons, returnedPerson]);
-      resetForm();
-      flush(
-        `${returnedPerson.name} has been secusfully added to the phonebook`
-      );
-    });
+    personsService
+      .create(newPersonObject)
+      .then((returnedPerson) => {
+        setPersons([...persons, returnedPerson]);
+        resetForm();
+        flush(
+          `${returnedPerson.name} has been secusfully added to the phonebook`
+        );
+      })
+      .catch((err) => {
+        flush(err.response.data.error, false);
+      });
   };
 
   const deletePerson = (id) => {
@@ -88,8 +93,13 @@ const App = () => {
         resetForm();
         flush(`${updatedPerson.name} has been updated`);
       })
-      .catch(() => {
+      .catch((err) => {
         resetForm();
+
+        if (err.response.data.error) {
+          flush(err.response.data.error);
+        }
+
         flush(`${newPerson.name} has already been deleted`, false);
         setPersons(persons.filter((p) => p.id !== id));
       });
