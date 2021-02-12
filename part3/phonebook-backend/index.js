@@ -16,11 +16,12 @@ app.use(
 );
 
 app.get('/info', (_, res) => {
-  const responseStr = `
-    Phonebook has info for ${persons.length} people
-    ${new Date().toGMTString()}
-  `;
-  res.send(responseStr);
+  Person.estimatedDocumentCount({}).then((count) =>
+    res.send(
+      `Phone book has info for ${count} people
+        ${new Date().toUTCString()}`
+    )
+  );
 });
 
 app.get('/api/persons', (_, res) => {
@@ -43,15 +44,16 @@ app.post('/api/persons', (req, res) => {
   person.save().then((savedPerson) => res.json(savedPerson));
 });
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const person = persons.find((p) => p.id === id);
-
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((err) => next(err));
 });
 
 app.delete('/api/persons/:id', (req, res, next) => {
