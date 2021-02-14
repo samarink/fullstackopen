@@ -75,15 +75,36 @@ describe('total likes', () => {
 });
 
 describe('favorite blog', () => {
-  test('of an empty list is empty blog', () => {
-    expect(listHelper.favoriteBlog([])).toEqual({});
+  test('of an empty list is null', () => {
+    expect(listHelper.favoriteBlog([])).toBe(null);
   });
 
   test('when list has only one blog equals that blog', () => {
-    expect(listHelper.favoriteBlog([blogs[0]])).toEqual(blogs[0]);
+    const blogList = [blogs[0]];
+
+    expect(listHelper.favoriteBlog(blogList)).toEqual(...blogList);
   });
 
   test('finds the right blog in a bigger list', () => {
     expect(listHelper.favoriteBlog(blogs)).toEqual(blogs[2]);
+  });
+});
+
+describe('most blogs', () => {
+  test('of an empty list is null', () => {
+    expect(listHelper.mostBlogs([])).toEqual(null);
+  });
+
+  test('when list has only one blog equals that blog author and blogs count is 1', () => {
+    const blog = [blogs[0]];
+    const expected = { author: 'Michael Chan', blogs: 1 };
+
+    expect(listHelper.mostBlogs(blog)).toEqual(expected);
+  });
+
+  test('finds the right blog in a bigger list', () => {
+    const expected = { author: 'Robert C. Martin', blogs: 3 };
+
+    expect(listHelper.mostBlogs(blogs)).toEqual(expected);
   });
 });
