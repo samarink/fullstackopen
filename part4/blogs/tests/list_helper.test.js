@@ -80,9 +80,9 @@ describe('favorite blog', () => {
   });
 
   test('when list has only one blog equals that blog', () => {
-    const blogList = [blogs[0]];
+    const singleBlogList = [blogs[0]];
 
-    expect(listHelper.favoriteBlog(blogList)).toEqual(...blogList);
+    expect(listHelper.favoriteBlog(singleBlogList)).toEqual(...singleBlogList);
   });
 
   test('finds the right blog in a bigger list', () => {
@@ -96,15 +96,34 @@ describe('most blogs', () => {
   });
 
   test('when list has only one blog equals that blog author and blogs count is 1', () => {
-    const blog = [blogs[0]];
+    const singleBlogList = [blogs[0]];
     const expected = { author: 'Michael Chan', blogs: 1 };
 
-    expect(listHelper.mostBlogs(blog)).toEqual(expected);
+    expect(listHelper.mostBlogs(singleBlogList)).toEqual(expected);
   });
 
   test('finds the right blog in a bigger list', () => {
     const expected = { author: 'Robert C. Martin', blogs: 3 };
 
     expect(listHelper.mostBlogs(blogs)).toEqual(expected);
+  });
+});
+
+describe('most likes', () => {
+  test('of an empty list is null', () => {
+    expect(listHelper.mostLikes([])).toEqual(null);
+  });
+
+  test('when list has only one blog equals that blog author and likes', () => {
+    const singleBlogList = [blogs[0]];
+    const expected = { author: 'Michael Chan', likes: 7 };
+
+    expect(listHelper.mostLikes(singleBlogList)).toEqual(expected);
+  });
+
+  test('finds the right blog in a bigger list', () => {
+    const expected = { author: 'Edsger W. Dijkstra', likes: 17 };
+
+    expect(listHelper.mostLikes(blogs)).toEqual(expected);
   });
 });

@@ -28,9 +28,26 @@ const mostBlogs = (blogs) => {
   return { author, blogs: count[author] };
 };
 
+const mostLikes = (blogs) => {
+  if (!blogs.length) return null;
+
+  const count = {};
+
+  blogs.forEach(
+    ({ author, likes }) => (count[author] = count[author] + likes || likes)
+  );
+
+  const author = Object.keys(count).reduce((a, b) =>
+    count[a] > count[b] ? a : b
+  );
+
+  return { author, likes: count[author] };
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
