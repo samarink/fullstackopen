@@ -33,4 +33,14 @@ router.delete('/:id', async (request, response) => {
   response.status(204).json(deletedBlog);
 });
 
+router.put('/:id', async (request, response) => {
+  const updatedBlog = await Blog.findOneAndUpdate(
+    request.params.id,
+    request.body,
+    { new: true }
+  );
+
+  response.json(updatedBlog);
+});
+
 module.exports = router;

@@ -89,11 +89,31 @@ test('a blog can be deleted', async () => {
 
   const blogsAtEnd = await helper.blogsInDb();
 
-  expect(blogsAtEnd).toHaveLength(helper.blogs.length - 1);
+  expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
 
   const titles = blogsAtEnd.map((b) => b.title);
 
   expect(titles).not.toContain(blogToDelete.title);
+});
+
+test('a blog can be updated', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+  const title = 'Updated title';
+  blogToUpdate.title = title;
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(blogToUpdate)
+    .expect(200);
+
+  const blogsAtEnd = await helper.blogsInDb();
+
+  expect(blogsAtEnd).toHaveLength(blogsAtStart.length);
+
+  const titles = blogsAtEnd.map((b) => b.title);
+
+  expect(titles).toContain(title);
 });
 
 afterAll(() => {
