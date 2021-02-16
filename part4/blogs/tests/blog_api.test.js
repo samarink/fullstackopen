@@ -63,17 +63,22 @@ test('if likes property missing from request it defaults to 0', async () => {
     url: 'http://example.com/',
   };
 
-  await api
-    .post('/api/blogs')
-    .send(newBLog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/);
+  await api.post('/api/blogs').send(newBLog);
 
   const response = await api.get('/api/blogs');
 
   const addedBlog = response.body.filter((r) => r.title === newBLog.title)[0];
 
   expect(addedBlog.likes).toBe(0);
+});
+
+test('if title and author properties are missing respond with 400 status code', async () => {
+  const newBLog = {
+    url: 'http://example.com/',
+    likes: 69,
+  };
+
+  await api.post('/api/blogs').send(newBLog).expect(400);
 });
 
 afterAll(() => {
