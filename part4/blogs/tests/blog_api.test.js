@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
-const blogs = require('./blogs');
+const helper = require('./testHelper');
 const Blog = require('../models/blog');
 
 const api = supertest(app);
@@ -9,7 +9,7 @@ const api = supertest(app);
 beforeEach(async () => {
   await Blog.deleteMany({});
 
-  const blogObjects = blogs.map((blog) => new Blog(blog));
+  const blogObjects = helper.blogs.map((blog) => new Blog(blog));
   const promiseArray = blogObjects.map((blog) => blog.save());
   await Promise.all(promiseArray);
 });
@@ -24,7 +24,7 @@ test('blogs are returned as json', async () => {
 test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs');
 
-  expect(response.body).toHaveLength(blogs.length);
+  expect(response.body).toHaveLength(helper.blogs.length);
 });
 
 test('blog has id property', async () => {
@@ -52,7 +52,7 @@ test('a valid blog can be added', async () => {
 
   const titles = response.body.map((r) => r.title);
 
-  expect(response.body).toHaveLength(blogs.length + 1);
+  expect(response.body).toHaveLength(helper.blogs.length + 1);
   expect(titles).toContain(newBLog.title);
 });
 
@@ -79,6 +79,21 @@ test('if title and author properties are missing respond with 400 status code', 
   };
 
   await api.post('/api/blogs').send(newBLog).expect(400);
+});
+
+test('a blog can be deleted', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToDelete = blogsAtStart[0];
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+  const blogsAtEnd = await helper.blogsInDb();
+
+  expect(blogsAtEnd).toHaveLength(helper.blogs.length - 1);
+
+  const titles = blogsAtEnd.map((b) => b.title);
+
+  expect(titles).not.toContain(blogToDelete.title);
 });
 
 afterAll(() => {

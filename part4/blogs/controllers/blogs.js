@@ -27,4 +27,10 @@ router.post('/', async (request, response) => {
   response.status(201).json(savedBlog);
 });
 
+router.delete('/:id', async (request, response) => {
+  const deletedBlog = await Blog.findByIdAndRemove(request.params.id);
+
+  response.status(204).json(deletedBlog);
+});
+
 module.exports = router;
