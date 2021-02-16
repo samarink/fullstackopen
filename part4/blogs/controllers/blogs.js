@@ -8,15 +8,11 @@ router.get('/', async (_, response) => {
   response.json(blogs);
 });
 
-router.post('/', (request, response, next) => {
+router.post('/', async (request, response) => {
   const blog = new Blog(request.body);
+  const savedBlog = await blog.save();
 
-  blog
-    .save()
-    .then((result) => {
-      response.status(201).json(result);
-    })
-    .catch((err) => next(err));
+  response.status(201).json(savedBlog);
 });
 
 module.exports = router;
