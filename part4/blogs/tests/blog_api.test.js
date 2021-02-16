@@ -14,106 +14,114 @@ beforeEach(async () => {
   await Promise.all(promiseArray);
 });
 
-test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
+describe('when there are blogs in db', () => {
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+  });
+
+  test('all blogs are returned', async () => {
+    const response = await api.get('/api/blogs');
+
+    expect(response.body).toHaveLength(helper.blogs.length);
+  });
+
+  test('blog has id property', async () => {
+    const response = await api.get('/api/blogs');
+    const blog = response.body[0];
+
+    expect(blog.id).toBeDefined();
+  });
 });
 
-test('all blogs are returned', async () => {
-  const response = await api.get('/api/blogs');
+describe('adding new blog', () => {
+  test('valid blog is added', async () => {
+    const newBLog = {
+      title: 'New Blog Title',
+      author: 'me :)',
+      url: 'http://example.com/',
+      likes: 0,
+    };
 
-  expect(response.body).toHaveLength(helper.blogs.length);
+    await api
+      .post('/api/blogs')
+      .send(newBLog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const response = await api.get('/api/blogs');
+
+    const titles = response.body.map((r) => r.title);
+
+    expect(response.body).toHaveLength(helper.blogs.length + 1);
+    expect(titles).toContain(newBLog.title);
+  });
+
+  test('if like property is missing it defaults to 0', async () => {
+    const newBLog = {
+      title: 'New Blog Title',
+      author: 'me :)',
+      url: 'http://example.com/',
+    };
+
+    await api.post('/api/blogs').send(newBLog);
+
+    const response = await api.get('/api/blogs');
+
+    const addedBlog = response.body.filter((r) => r.title === newBLog.title)[0];
+
+    expect(addedBlog.likes).toBe(0);
+  });
+
+  test('if title and author properties are missing fail with 400 status code', async () => {
+    const newBLog = {
+      url: 'http://example.com/',
+      likes: 69,
+    };
+
+    await api.post('/api/blogs').send(newBLog).expect(400);
+  });
 });
 
-test('blog has id property', async () => {
-  const response = await api.get('/api/blogs');
-  const blog = response.body[0];
+describe('deletion of a blog', () => {
+  test('succeeds for valid id', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
 
-  expect(blog.id).toBeDefined();
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
+
+    const titles = blogsAtEnd.map((b) => b.title);
+
+    expect(titles).not.toContain(blogToDelete.title);
+  });
 });
 
-test('a valid blog can be added', async () => {
-  const newBLog = {
-    title: 'New Blog Title',
-    author: 'me :)',
-    url: 'http://example.com/',
-    likes: 0,
-  };
+describe('updating a blog', () => {
+  test('succeeds for valid id', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
+    const title = 'Updated title';
+    blogToUpdate.title = title;
 
-  await api
-    .post('/api/blogs')
-    .send(newBLog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/);
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200);
 
-  const response = await api.get('/api/blogs');
+    const blogsAtEnd = await helper.blogsInDb();
 
-  const titles = response.body.map((r) => r.title);
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length);
 
-  expect(response.body).toHaveLength(helper.blogs.length + 1);
-  expect(titles).toContain(newBLog.title);
-});
+    const titles = blogsAtEnd.map((b) => b.title);
 
-test('if likes property missing from request it defaults to 0', async () => {
-  const newBLog = {
-    title: 'New Blog Title',
-    author: 'me :)',
-    url: 'http://example.com/',
-  };
-
-  await api.post('/api/blogs').send(newBLog);
-
-  const response = await api.get('/api/blogs');
-
-  const addedBlog = response.body.filter((r) => r.title === newBLog.title)[0];
-
-  expect(addedBlog.likes).toBe(0);
-});
-
-test('if title and author properties are missing respond with 400 status code', async () => {
-  const newBLog = {
-    url: 'http://example.com/',
-    likes: 69,
-  };
-
-  await api.post('/api/blogs').send(newBLog).expect(400);
-});
-
-test('a blog can be deleted', async () => {
-  const blogsAtStart = await helper.blogsInDb();
-  const blogToDelete = blogsAtStart[0];
-
-  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
-
-  const blogsAtEnd = await helper.blogsInDb();
-
-  expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
-
-  const titles = blogsAtEnd.map((b) => b.title);
-
-  expect(titles).not.toContain(blogToDelete.title);
-});
-
-test('a blog can be updated', async () => {
-  const blogsAtStart = await helper.blogsInDb();
-  const blogToUpdate = blogsAtStart[0];
-  const title = 'Updated title';
-  blogToUpdate.title = title;
-
-  await api
-    .put(`/api/blogs/${blogToUpdate.id}`)
-    .send(blogToUpdate)
-    .expect(200);
-
-  const blogsAtEnd = await helper.blogsInDb();
-
-  expect(blogsAtEnd).toHaveLength(blogsAtStart.length);
-
-  const titles = blogsAtEnd.map((b) => b.title);
-
-  expect(titles).toContain(title);
+    expect(titles).toContain(title);
+  });
 });
 
 afterAll(() => {
