@@ -43,9 +43,24 @@ router.post('/', async (request, response) => {
 });
 
 router.delete('/:id', async (request, response) => {
-  const deletedBlog = await Blog.findByIdAndRemove(request.params.id);
+  const blog = await Blog.findById(request.params.id);
 
-  response.status(204).json(deletedBlog);
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' });
+  }
+
+  const user = await User.findById(decodedToken.id);
+
+
+  if (blog.user.toString() === user.id.toString()) {
+    const deletedBlog = await blog.delete();
+
+    response.status(204).json(deletedBlog);
+  } else {
+    response.status(401).json({ error: 'not authorized' });
+  }
 });
 
 router.put('/:id', async (request, response) => {
