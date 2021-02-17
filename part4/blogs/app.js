@@ -6,8 +6,10 @@ const cors = require('cors');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 const mongoose = require('mongoose');
+
 const blogs = require('./controllers/blogs');
 const users = require('./controllers/users');
+const login = require('./controllers/login');
 
 logger.info('connecting to', config.MONGODB_URI);
 
@@ -31,6 +33,7 @@ app.use(middleware.requestLogger);
 
 app.use('/api/blogs', blogs);
 app.use('/api/users', users);
+app.use('/api/login', login);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
