@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-//const Blog = require('../models/blog');
 
 router.get('/', async (_, response) => {
   const users = await User.find({}).populate('blogs', {
@@ -9,10 +8,8 @@ router.get('/', async (_, response) => {
     author: 1,
     url: 1,
   });
-  // const users = await User.find({}).populate('blogs');
 
   response.json(users);
-  //response.json(users.map((u) => u.toJSON()));
 });
 
 router.post('/', async (request, response) => {
