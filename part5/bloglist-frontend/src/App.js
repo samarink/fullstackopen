@@ -8,6 +8,9 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -32,6 +35,7 @@ const App = () => {
       });
 
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
+      blogService.setToken(user.token);
 
       setUser(user);
       setUsername('');
@@ -44,6 +48,19 @@ const App = () => {
   const logout = () => {
     window.localStorage.removeItem('loggedBlogAppUser');
     setUser(null);
+  };
+
+  const createNewBlog = async () => {
+    const newBlog = await blogService.create({
+      title,
+      author,
+      url,
+    });
+
+    setTitle('');
+    setAuthor('');
+    setUrl('');
+    setBlogs([...blogs, newBlog]);
   };
 
   const loginForm = () => (
@@ -79,12 +96,47 @@ const App = () => {
     </div>
   );
 
+  const newBlogForm = () => (
+    <form onSubmit={createNewBlog}>
+      <div>
+        title
+        <input
+          type="text"
+          value={title}
+          name="title"
+          onChange={({ target }) => setTitle(target.value)}
+        />
+      </div>
+      <div>
+        author
+        <input
+          type="text"
+          value={author}
+          name="author"
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+      </div>
+      <div>
+        url
+        <input
+          type="text"
+          value={url}
+          name="url"
+          onChange={({ target }) => setUrl(target.value)}
+        />
+      </div>
+      <button type="submit">add blog</button>
+    </form>
+  );
+
   return (
     <>
       {user ? (
         <>
           <p>{user.username} is logged in</p>
           <button onClick={logout}>log out</button>
+          <h2>Create new</h2>
+          {newBlogForm()}
           {blogsContainer()}
         </>
       ) : (
