@@ -48,6 +48,11 @@ const App = () => {
     }
   };
 
+  const logout = () => {
+    window.localStorage.removeItem('loggedBlogAppUser');
+    setUser(null);
+  };
+
   const handleLike = async (likeObject) => {
     const updatedObject = await blogService.update(likeObject);
     const newBlogs = blogs.map((b) =>
@@ -60,9 +65,15 @@ const App = () => {
     setBlogs(sortedBlogs);
   };
 
-  const logout = () => {
-    window.localStorage.removeItem('loggedBlogAppUser');
-    setUser(null);
+  const handleDelete = async (blogObject) => {
+    const str = `Remove blog ${blogObject.title} by ${blogObject.author}`;
+    if (!window.confirm(str)) return;
+
+    await blogService.remove(blogObject);
+
+    const newBlogs = blogs.filter((b) => b.id !== blogObject.id);
+    const sortedBlogs = sortByLikes(newBlogs);
+    setBlogs(sortedBlogs);
   };
 
   const createNewBlog = async (blogObject) => {
@@ -85,7 +96,7 @@ const App = () => {
           <Toggable buttonLabel="New Blog" ref={blogFormRef}>
             <BlogForm createNewBlog={createNewBlog} />
           </Toggable>
-          <Blogs blogs={blogs} handleLike={handleLike} />
+          <Blogs blogs={blogs} handleLike={handleLike} handleDelete={handleDelete} />
         </>
       ) : (
         <>

@@ -7,19 +7,35 @@ const setToken = (newToken) => {
   token = `Bearer ${newToken}`;
 };
 
-const config = {
-  headers: { Authorization: token },
-};
-
 const create = async (newObject) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
   const response = await axios.post(baseUrl, newObject, config);
   return response.data;
 };
 
 const update = async (updatedObject) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
   const response = await axios.put(
     `${baseUrl}/${updatedObject.id}`,
     updatedObject,
+    config
+  );
+  return response.data;
+};
+
+const remove = async (objectToRemove) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const response = await axios.delete(
+    `${baseUrl}/${objectToRemove.id}`,
     config
   );
   return response.data;
@@ -30,4 +46,4 @@ const getAll = async () => {
   return response.data;
 };
 
-export default { getAll, setToken, create, update };
+export default { getAll, setToken, create, update, remove };

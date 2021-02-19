@@ -8,15 +8,33 @@ const blogStyle = {
   marginBottom: 5,
 };
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, handleLike, handleDelete }) => {
   const { title, author, url, likes, user } = blog;
+
   const [fullView, setFullView] = useState(false);
+
   const toggleFullView = () => setFullView(!fullView);
+
+  const createdByCurrentUser = () => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
+
+    if (!loggedUserJSON) return false;
+
+    const currentUser = JSON.parse(loggedUserJSON);
+
+    return currentUser.username === user.username;
+  };
 
   const handleLikeSubmit = async (event) => {
     event.preventDefault();
 
     handleLike({ ...blog, likes: blog.likes + 1, user: user.id });
+  };
+
+  const handleDeleteSubmit = async (event) => {
+    event.preventDefault();
+
+    handleDelete(blog);
   };
 
   return (
@@ -31,6 +49,9 @@ const Blog = ({ blog, handleLike }) => {
             {likes}
             <button onClick={handleLikeSubmit}>like</button>
           </p>
+          {createdByCurrentUser() && (
+            <button onClick={handleDeleteSubmit}>remove</button>
+          )}
         </div>
       ) : (
         <div>
