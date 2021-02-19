@@ -9,13 +9,10 @@ import loginService from './services/login';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
   const [message, setMessage] = useState(null);
+
+  const blogFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -31,21 +28,14 @@ const App = () => {
     }
   }, []);
 
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
+  const handleLogin = async (userObject) => {
     try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
+      const user = await loginService.login(userObject);
+
+      setUser(user);
 
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
       blogService.setToken(user.token);
-
-      setUser(user);
-      setUsername('');
-      setPassword('');
     } catch (exception) {
       setMessage('Username or password incorrect');
       setTimeout(() => setMessage(null), 3000);
@@ -58,24 +48,15 @@ const App = () => {
     setUser(null);
   };
 
-  const createNewBlog = async () => {
+  const createNewBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility();
 
-    const newBlog = await blogService.create({
-      title,
-      author,
-      url,
-    });
+    const newBlog = await blogService.create(blogObject);
 
-    setTitle('');
-    setAuthor('');
-    setUrl('');
     setBlogs([...blogs, newBlog]);
     setMessage(`A new blog ${newBlog.title} by ${newBlog.author} added`);
     setTimeout(() => setMessage(null), 3000);
   };
-
-  const blogFormRef = useRef();
 
   return (
     <>
@@ -85,28 +66,14 @@ const App = () => {
           <p>{user.username} is logged in</p>
           <button onClick={logout}>log out</button>
           <Toggable buttonLabel="New Blog" ref={blogFormRef}>
-            <BlogForm
-              createNewBlog={createNewBlog}
-              title={title}
-              setTitle={setTitle}
-              author={author}
-              setAuthor={setAuthor}
-              url={url}
-              setUrl={setUrl}
-            />
+            <BlogForm createNewBlog={createNewBlog} />
           </Toggable>
           <Blogs blogs={blogs} />
         </>
       ) : (
         <>
           <Notification message={message} />
-          <LoginForm
-            handleLogin={handleLogin}
-            username={username}
-            password={password}
-            setUsername={setUsername}
-            setPassword={setPassword}
-          />
+          <LoginForm handleLogin={handleLogin} />
         </>
       )}
     </>
