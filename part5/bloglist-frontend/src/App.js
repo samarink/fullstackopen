@@ -15,7 +15,10 @@ const App = () => {
   const blogFormRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService
+      .getAll()
+      .then((blogs) => sortByLikes(blogs))
+      .then((sorted) => setBlogs(sorted));
   }, []);
 
   useEffect(() => {
@@ -27,6 +30,8 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
+
+  const sortByLikes = (arr) => arr.sort((a, b) => b.likes - a.likes);
 
   const handleLogin = async (userObject) => {
     try {
@@ -51,7 +56,8 @@ const App = () => {
         : { ...b, likes: b.likes + 1 }
     );
 
-    setBlogs(newBlogs);
+    const sortedBlogs = sortByLikes(newBlogs);
+    setBlogs(sortedBlogs);
   };
 
   const logout = () => {
