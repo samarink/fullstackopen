@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Blogs from './components/Blogs';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
+import Toggable from './components/Toggable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -26,6 +27,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
+      blogService.setToken(user.token);
     }
   }, []);
 
@@ -57,6 +59,8 @@ const App = () => {
   };
 
   const createNewBlog = async () => {
+    blogFormRef.current.toggleVisibility();
+
     const newBlog = await blogService.create({
       title,
       author,
@@ -71,6 +75,8 @@ const App = () => {
     setTimeout(() => setMessage(null), 3000);
   };
 
+  const blogFormRef = useRef();
+
   return (
     <>
       {user ? (
@@ -78,16 +84,17 @@ const App = () => {
           <Notification message={message} />
           <p>{user.username} is logged in</p>
           <button onClick={logout}>log out</button>
-          <h2>Create new</h2>
-          <BlogForm
-            createNewBlog={createNewBlog}
-            title={title}
-            setTitle={setTitle}
-            author={author}
-            setAuthor={setAuthor}
-            url={url}
-            setUrl={setUrl}
-          />
+          <Toggable buttonLabel="New Blog" ref={blogFormRef}>
+            <BlogForm
+              createNewBlog={createNewBlog}
+              title={title}
+              setTitle={setTitle}
+              author={author}
+              setAuthor={setAuthor}
+              url={url}
+              setUrl={setUrl}
+            />
+          </Toggable>
           <Blogs blogs={blogs} />
         </>
       ) : (
