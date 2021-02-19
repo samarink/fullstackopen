@@ -8,10 +8,16 @@ const blogStyle = {
   marginBottom: 5,
 };
 
-const Blog = ({ blog: { title, author, url, likes } }) => {
+const Blog = ({ blog, handleLike }) => {
+  const { title, author, url, likes, user } = blog;
   const [fullView, setFullView] = useState(false);
-
   const toggleFullView = () => setFullView(!fullView);
+
+  const handleLikeSubmit = async (event) => {
+    event.preventDefault();
+
+    handleLike({ ...blog, likes: blog.likes + 1, user: user.id });
+  };
 
   return (
     <div style={blogStyle}>
@@ -23,7 +29,7 @@ const Blog = ({ blog: { title, author, url, likes } }) => {
           <a href={url}>read</a>
           <p>
             {likes}
-            <button>like</button>
+            <button onClick={handleLikeSubmit}>like</button>
           </p>
         </div>
       ) : (

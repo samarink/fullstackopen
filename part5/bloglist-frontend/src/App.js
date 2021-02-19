@@ -43,6 +43,17 @@ const App = () => {
     }
   };
 
+  const handleLike = async (likeObject) => {
+    const updatedObject = await blogService.update(likeObject);
+    const newBlogs = blogs.map((b) =>
+      b.id.toString() !== updatedObject.id.toString()
+        ? b
+        : { ...b, likes: b.likes + 1 }
+    );
+
+    setBlogs(newBlogs);
+  };
+
   const logout = () => {
     window.localStorage.removeItem('loggedBlogAppUser');
     setUser(null);
@@ -68,7 +79,7 @@ const App = () => {
           <Toggable buttonLabel="New Blog" ref={blogFormRef}>
             <BlogForm createNewBlog={createNewBlog} />
           </Toggable>
-          <Blogs blogs={blogs} />
+          <Blogs blogs={blogs} handleLike={handleLike} />
         </>
       ) : (
         <>
