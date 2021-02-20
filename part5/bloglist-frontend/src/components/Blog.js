@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 
 const blogStyle = {
@@ -63,6 +64,12 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
       <button onClick={toggleFullView}>{fullView ? 'hide' : 'show'}</button>
     </div>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  handleLike: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 };
 
 export default Blog;
