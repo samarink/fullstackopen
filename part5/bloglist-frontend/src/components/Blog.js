@@ -26,13 +26,13 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
     return currentUser.username === user.username;
   };
 
-  const handleLikeSubmit = async (event) => {
+  const handleLikeSubmit = (event) => {
     event.preventDefault();
 
     handleLike({ ...blog, likes: blog.likes + 1, user: user.id });
   };
 
-  const handleDeleteSubmit = async (event) => {
+  const handleDeleteSubmit = (event) => {
     event.preventDefault();
 
     handleDelete(blog);
