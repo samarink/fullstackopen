@@ -21,9 +21,10 @@ describe('unicafe reducer', () => {
     const action = {
       type: 'GOOD',
     };
-    const state = initialState;
 
+    const state = initialState;
     deepFreeze(state);
+
     const newState = counterReducer(state, action);
     expect(newState).toEqual({
       good: 1,
@@ -36,9 +37,10 @@ describe('unicafe reducer', () => {
     const action = {
       type: 'OK',
     };
-    const state = initialState;
 
+    const state = initialState;
     deepFreeze(state);
+
     const newState = counterReducer(state, action);
     expect(newState).toEqual({
       good: 0,
@@ -51,9 +53,10 @@ describe('unicafe reducer', () => {
     const action = {
       type: 'BAD',
     };
-    const state = initialState;
 
+    const state = initialState;
     deepFreeze(state);
+
     const newState = counterReducer(state, action);
     expect(newState).toEqual({
       good: 0,
@@ -66,9 +69,10 @@ describe('unicafe reducer', () => {
     const action = {
       type: 'ZERO',
     };
-    const state = initialState;
 
+    const state = initialState;
     deepFreeze(state);
+
     const newState = counterReducer(state, action);
     expect(newState).toEqual({
       good: 0,
