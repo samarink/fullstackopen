@@ -1,7 +1,7 @@
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3001/api/testing/reset');
-    cy.request('POST', 'http://localhost:3001/api/users', {
+    cy.register({
       username: 'kkkk',
       password: 'password123',
     });
@@ -28,30 +28,49 @@ describe('Blog app', function () {
 
     describe('When logged in', function () {
       beforeEach(function () {
-        cy.loginUI({ username: 'kkkk', password: 'password123' });
+        cy.login({ username: 'kkkk', password: 'password123' });
       });
 
       it('a blog can be created', function () {
-        cy.contains('New Blog').click();
-
-        cy.get('#title').type('new title');
-        cy.get('#author').type('an author');
-        cy.get('#url').type('http://example.com/blog/24');
-        cy.contains('add blog').click();
+        cy.createBlogUI({
+          title: 'new title',
+          author: 'new author',
+          url: 'new url',
+        });
 
         cy.contains('new title');
       });
 
-      it.only('blog can be liked', function () {
-        cy.contains('New Blog').click();
+      it('blog can be liked', function () {
+        cy.createBlogUI({
+          title: 'new title',
+          author: 'new author',
+          url: 'new url',
+        });
 
-        cy.get('#title').type('new title');
-        cy.get('#author').type('an author');
-        cy.get('#url').type('http://example.com/blog/24');
-        cy.contains('add blog').click();
-
-        cy.get('.blog-div').contains('show').click();
+        cy.contains('show').click();
         cy.contains('like').click();
+      });
+
+      describe('deleting blog', function () {
+        beforeEach(function () {
+          cy.createBlog({ title: 'new title', author: 'author', url: 'url' });
+        });
+
+        it('succeeds for user who created it', function () {
+          cy.contains('show').click();
+          cy.contains('remove').click();
+          cy.get('html').should('not.contain', 'new title');
+        });
+
+        it('fails for user who did not create it', function () {
+          const user = { username: 'qqqq', password: 'password123' };
+
+          cy.register(user);
+          cy.login(user);
+
+          cy.contains('show').click().parent().should('not.contain', 'remove');
+        });
       });
     });
   });
