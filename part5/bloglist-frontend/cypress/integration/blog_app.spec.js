@@ -14,20 +14,33 @@ describe('Blog app', function () {
 
   describe('Login', function () {
     it('succeeds with correct credentials', function () {
-      cy.get('#username').type('kkkk');
-      cy.get('#password').type('password123');
-      cy.get('#loginButton').click();
-
+      cy.loginUI({ username: 'kkkk', password: 'password123' });
       cy.contains('kkkk is logged in');
     });
 
-    it.only('fails with wrong credentials', function () {
-      cy.get('#username').type('kkkk');
-      cy.get('#password').type('wrong');
+    it('fails with wrong credentials', function () {
+      cy.loginUI({ username: 'kkkk', password: 'wrong' });
       cy.get('#loginButton').click();
 
       cy.contains('Username or password incorrect');
       cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)');
+    });
+
+    describe('When logged in', function () {
+      beforeEach(function () {
+        cy.loginUI({ username: 'kkkk', password: 'password123' });
+      });
+
+      it('a blog can be created', function () {
+        cy.contains('New Blog').click();
+
+        cy.get('#title').type('new title');
+        cy.get('#author').type('an author');
+        cy.get('#url').type('http://example.com/blog/24');
+        cy.contains('add blog').click();
+
+        cy.contains('new title');
+      });
     });
   });
 });
