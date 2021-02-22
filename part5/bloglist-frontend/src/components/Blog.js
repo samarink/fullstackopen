@@ -39,7 +39,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div className="blog-div" style={blogStyle}>
       {fullView ? (
         <div>
           <p>
@@ -55,7 +55,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
           )}
         </div>
       ) : (
-        <div>
+        <div className="blog-div">
           <p>
             {title} {author}
           </p>
