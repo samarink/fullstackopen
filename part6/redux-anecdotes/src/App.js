@@ -3,7 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { anecdoteVote, anecdoteAdd } from './reducers/anecdoteReducer';
 
 const App = () => {
-  const anecdotes = useSelector((state) => state);
+  const anecdotes = useSelector((state) =>
+    state.sort((a, b) => b.votes - a.votes)
+  );
+
   const dispatch = useDispatch();
 
   const vote = (id) => {
@@ -34,10 +37,8 @@ const App = () => {
 
       <form onSubmit={add}>
         <h3>Add New</h3>
-
         Content:
         <input type="text" name="content" />
-
         <button type="submit">add</button>
       </form>
     </div>
