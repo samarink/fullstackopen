@@ -25,10 +25,12 @@ const AnecdoteList = () => {
       .filter((a) => a.content.toLowerCase().includes(filter))
   );
 
-  const vote = ({ id, content }) => {
-    dispatch(anecdoteVote(id));
+  const vote = (anecdote) => {
+    dispatch(
+      anecdoteVote({ ...anecdote, votes: anecdote.votes + 1 })
+    );
 
-    const notification = `you voted for '${content}'`;
+    const notification = `you voted for '${anecdote.content}'`;
     dispatch(notificationChange(notification));
     setTimeout(() => {
       dispatch(notificationChange(null));
