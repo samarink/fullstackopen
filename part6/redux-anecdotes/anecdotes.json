@@ -3,7 +3,7 @@
     {
       "content": "If it hurts, do it more often",
       "id": "47145",
-      "votes": 10
+      "votes": 11
     },
     {
       "content": "Adding manpower to a late software project makes it later!",
@@ -18,7 +18,7 @@
     {
       "content": "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
       "id": "36975",
-      "votes": 0
+      "votes": 1
     },
     {
       "content": "Premature optimization is the root of all evil.",
@@ -39,6 +39,16 @@
       "content": "Hi I'm new",
       "votes": 0,
       "id": "Ie9a8Tz"
+    },
+    {
+      "content": "Hi I'm new 3",
+      "votes": 0,
+      "id": "xoJbkSj"
+    },
+    {
+      "content": "Hi I'm new 4",
+      "votes": 0,
+      "id": "Fy9QKqb"
     }
   ]
 }

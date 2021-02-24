@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { anecdoteAdd } from '../reducers/anecdoteReducer';
+import { notificationFlush } from '../reducers/notificationReducer';
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ const AnecdoteForm = () => {
     event.target.content.value = '';
 
     dispatch(anecdoteAdd(content));
+    dispatch(notificationFlush(`'${content}' has been added`, 5));
   };
 
   return (

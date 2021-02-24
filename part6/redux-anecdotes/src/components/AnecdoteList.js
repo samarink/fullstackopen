@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { anecdoteVote } from '../reducers/anecdoteReducer';
-import { notificationChange } from '../reducers/notificationReducer';
+import { notificationFlush } from '../reducers/notificationReducer';
 
 const Anecdote = ({ anecdote, hanleClick }) => {
   return (
@@ -26,15 +26,8 @@ const AnecdoteList = () => {
   );
 
   const vote = (anecdote) => {
-    dispatch(
-      anecdoteVote({ ...anecdote, votes: anecdote.votes + 1 })
-    );
-
-    const notification = `you voted for '${anecdote.content}'`;
-    dispatch(notificationChange(notification));
-    setTimeout(() => {
-      dispatch(notificationChange(null));
-    }, 5000);
+    dispatch(anecdoteVote({ ...anecdote, votes: anecdote.votes + 1 }));
+    dispatch(notificationFlush(`you voted for '${anecdote.content}'`, 3));
   };
 
   return (

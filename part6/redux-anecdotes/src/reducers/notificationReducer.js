@@ -7,7 +7,14 @@ const notificationReducer = (state = null, action) => {
   }
 };
 
-export const notificationChange = (notification) => ({
+export const notificationFlush = (notification, timeout) => async (
+  dispatch
+) => {
+  dispatch(notificationChange(notification));
+  setTimeout(() => dispatch(notificationChange(null)), timeout * 1000);
+};
+
+const notificationChange = (notification) => ({
   type: 'SET_NOTIFICATION',
   notification,
 });
