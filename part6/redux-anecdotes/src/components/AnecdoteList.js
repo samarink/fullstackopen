@@ -17,8 +17,12 @@ const Anecdote = ({ anecdote, hanleClick }) => {
 
 const AnecdoteList = () => {
   const dispatch = useDispatch();
+
+  const filter = useSelector((state) => state.filter);
   const anecdotes = useSelector((state) =>
-    state.anecdotes.sort((a, b) => b.votes - a.votes)
+    state.anecdotes
+      .sort((a, b) => b.votes - a.votes)
+      .filter((a) => a.content.toLowerCase().includes(filter))
   );
 
   const vote = ({ id, content }) => {
