@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {
-  BrowserRouter as Switch,
+  Switch,
   Route,
   Link,
   useRouteMatch,
+  useHistory,
 } from 'react-router-dom';
 
 const Menu = () => {
@@ -46,6 +47,7 @@ const Anecdote = ({ anecdote }) => (
     <p>{anecdote.votes}</p>
   </div>
 );
+
 const About = () => (
   <div>
     <h2>About anecdote app</h2>
@@ -149,11 +151,16 @@ const App = () => {
     },
   ]);
 
-  const [notification, setNotification] = useState('');
+  const [notification, setNotification] = useState(null);
+
+  const history = useHistory();
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
+    history.push('/');
+    setNotification(`${anecdote.content} has been added`);
+    setTimeout(() => setNotification(null), 10000);
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -177,6 +184,7 @@ const App = () => {
   return (
     <>
       <h1>Software anecdotes</h1>
+      <div>{notification}</div>
       <Menu />
 
       <Switch>
