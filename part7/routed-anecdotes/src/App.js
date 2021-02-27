@@ -110,24 +110,22 @@ const CreateNew = (props) => {
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input {...content} />
-        </div>
-        <div>
-          author
-          <input {...author} />
-        </div>
-        <div>
-          url for more info
-          <input {...info} />
-        </div>
+        <Input label="content" {...content} />
+        <Input label="author" {...author} />
+        <Input label="info" {...info} />
         <button>create</button>
         <button onClick={resetForm}>reset</button>
       </form>
     </div>
   );
 };
+
+const Input = ({ reset, label, ...rest }) => (
+  <div>
+    {label}
+    <input {...rest} />
+  </div>
+);
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
