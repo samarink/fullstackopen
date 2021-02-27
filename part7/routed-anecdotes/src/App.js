@@ -101,6 +101,11 @@ const CreateNew = (props) => {
     });
   };
 
+  const resetForm = (e) => {
+    e.preventDefault();
+    [content, author, info].forEach((f) => f.reset());
+  };
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -118,6 +123,7 @@ const CreateNew = (props) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button onClick={resetForm}>reset</button>
       </form>
     </div>
   );
