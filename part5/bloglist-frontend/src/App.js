@@ -7,19 +7,14 @@ import Toggable from './components/Toggable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
+import { notificationSet } from './reducers/notificationReducer';
+import { useDispatch } from 'react-redux';
+
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const dispatch = useDispatch();
   const [user, setUser] = useState(null);
-  const [message, setMessage] = useState(null);
 
   const blogFormRef = useRef();
-
-  useEffect(() => {
-    blogService
-      .getAll()
-      .then((blogs) => sortByLikes(blogs))
-      .then((sorted) => setBlogs(sorted));
-  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
@@ -31,8 +26,6 @@ const App = () => {
     }
   }, []);
 
-  const sortByLikes = (arr) => arr.sort((a, b) => b.likes - a.likes);
-
   const handleLogin = async (userObject) => {
     try {
       const user = await loginService.login(userObject);
@@ -42,8 +35,10 @@ const App = () => {
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
       blogService.setToken(user.token);
     } catch (exception) {
-      setMessage('Username or password incorrect');
-      setTimeout(() => setMessage(null), 3000);
+      dispatch(notificationSet('username or password incorrect'));
+      setTimeout(() => {
+        dispatch(notificationSet(null));
+      }, 5000);
       console.log(exception);
     }
   };
@@ -53,54 +48,21 @@ const App = () => {
     setUser(null);
   };
 
-  const handleLike = async (likeObject) => {
-    const updatedObject = await blogService.update(likeObject);
-    const newBlogs = blogs.map((b) =>
-      b.id.toString() !== updatedObject.id.toString()
-        ? b
-        : { ...b, likes: b.likes + 1 }
-    );
-
-    const sortedBlogs = sortByLikes(newBlogs);
-    setBlogs(sortedBlogs);
-  };
-
-  const handleDelete = async (blogObject) => {
-    const str = `Remove blog ${blogObject.title} by ${blogObject.author}`;
-    if (!window.confirm(str)) return;
-
-    await blogService.remove(blogObject);
-
-    const newBlogs = blogs.filter((b) => b.id !== blogObject.id);
-    const sortedBlogs = sortByLikes(newBlogs);
-    setBlogs(sortedBlogs);
-  };
-
-  const createNewBlog = async (blogObject) => {
-    blogFormRef.current.toggleVisibility();
-
-    const newBlog = await blogService.create(blogObject);
-
-    setBlogs([...blogs, newBlog]);
-    setMessage(`A new blog ${newBlog.title} by ${newBlog.author} added`);
-    setTimeout(() => setMessage(null), 3000);
-  };
-
   return (
     <>
       {user ? (
         <>
-          <Notification message={message} />
+          <Notification />
           <p>{user.username} is logged in</p>
           <button onClick={logout}>log out</button>
           <Toggable buttonLabel="New Blog" ref={blogFormRef}>
-            <BlogForm createNewBlog={createNewBlog} />
+            <BlogForm user={user} />
           </Toggable>
-          <Blogs blogs={blogs} handleLike={handleLike} handleDelete={handleDelete} />
+          <Blogs />
         </>
       ) : (
         <>
-          <Notification message={message} />
+          <Notification />
           <LoginForm handleLogin={handleLogin} />
         </>
       )}

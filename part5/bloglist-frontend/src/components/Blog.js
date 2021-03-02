@@ -1,5 +1,7 @@
-import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { blogLike, blogDelete } from '../reducers/blogsReducer';
+import { notificationSet } from '../reducers/notificationReducer';
 
 const blogStyle = {
   paddingTop: 10,
@@ -9,11 +11,11 @@ const blogStyle = {
   marginBottom: 5,
 };
 
-const Blog = ({ blog, handleLike, handleDelete }) => {
+const Blog = ({ blog }) => {
   const { title, author, url, likes, user } = blog;
 
+  const dispatch = useDispatch();
   const [fullView, setFullView] = useState(false);
-
   const toggleFullView = () => setFullView(!fullView);
 
   const createdByCurrentUser = () => {
@@ -22,20 +24,25 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
     if (!loggedUserJSON) return false;
 
     const currentUser = JSON.parse(loggedUserJSON);
-
-    return currentUser.username === user.username;
+    return currentUser.id === user.id;
   };
 
-  const handleLikeSubmit = (event) => {
+  const handleLike = (event) => {
     event.preventDefault();
-
-    handleLike({ ...blog, likes: blog.likes + 1, user: user.id });
+    dispatch(blogLike({ ...blog, likes: blog.likes + 1, user: user.id }));
+    dispatch(notificationSet(`${blog.title} has been liked`));
+    setTimeout(() => {
+      dispatch(notificationSet(null));
+    }, 5000);
   };
 
-  const handleDeleteSubmit = (event) => {
+  const handleDelete = (event) => {
     event.preventDefault();
-
-    handleDelete(blog);
+    dispatch(blogDelete(blog));
+    dispatch(notificationSet(`${blog.title} has been deleted`));
+    setTimeout(() => {
+      dispatch(notificationSet(null));
+    }, 5000);
   };
 
   return (
@@ -48,10 +55,10 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
           {url}
           <p>
             {likes}
-            <button onClick={handleLikeSubmit}>like</button>
+            <button onClick={handleLike}>like</button>
           </p>
           {createdByCurrentUser() && (
-            <button onClick={handleDeleteSubmit}>remove</button>
+            <button onClick={handleDelete}>remove</button>
           )}
         </div>
       ) : (
@@ -64,12 +71,6 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
       <button onClick={toggleFullView}>{fullView ? 'hide' : 'show'}</button>
     </div>
   );
-};
-
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  handleLike: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
 };
 
 export default Blog;

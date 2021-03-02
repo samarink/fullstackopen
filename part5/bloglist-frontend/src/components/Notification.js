@@ -1,11 +1,12 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 const messageStyle = {
   color: 'red',
 };
 
-const Notification = ({ message }) => {
+const Notification = () => {
+  const message = useSelector((state) => state.notification);
   if (!message) return null;
 
   return (
@@ -13,10 +14,6 @@ const Notification = ({ message }) => {
       {message}
     </div>
   );
-};
-
-Notification.propTypes = {
-  message: PropTypes.string,
 };
 
 export default Notification;
