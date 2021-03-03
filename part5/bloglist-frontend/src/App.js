@@ -12,6 +12,7 @@ import Logout from './components/Logout';
 import Navbar from './components/Navbar';
 import Users from './components/Users';
 import UserView from './components/UserView';
+import BlogView from './components/BlogView';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,9 @@ const App = () => {
               </Route>
               <Route path="/users">
                 <Users />
+              </Route>
+              <Route path="/blogs/:id">
+                <BlogView />
               </Route>
               <Route path="/">
                 <Toggable buttonLabel="New Blog" ref={blogFormRef}>

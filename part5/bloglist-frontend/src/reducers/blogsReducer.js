@@ -28,7 +28,7 @@ export const blogAdd = (object) => async (dispatch) => {
 };
 
 export const blogLike = (object) => async (dispatch) => {
-  const blog = await blogService.update(object);
+  const blog = await blogService.update({ ...object, likes: object.likes + 1, user: object.user.id });
   dispatch({ type: 'LIKE_BLOG', id: blog.id });
 };
 

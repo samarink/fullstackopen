@@ -42,6 +42,19 @@ router.post('/', async (request, response) => {
   response.status(201).json(savedBlog);
 });
 
+router.get('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id).populate('user', {
+    username: 1,
+    name: 1,
+  });
+
+  if (blog) {
+    return response.json(blog);
+  } else {
+    return response.code(404).end();
+  }
+});
+
 router.delete('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id);
 

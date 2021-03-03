@@ -41,9 +41,14 @@ const remove = async (objectToRemove) => {
   return response.data;
 };
 
+const getById = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`);
+  return response.data;
+};
+
 const getAll = async () => {
   const response = await axios.get(baseUrl);
   return response.data;
 };
 
-export default { getAll, setToken, create, update, remove };
+export default { getAll, setToken, create, update, remove, getById };

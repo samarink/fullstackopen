@@ -8,7 +8,7 @@ const UserView = () => {
 
   useEffect(() => {
     usersService.getById(id).then((user) => setUser(user));
-  }, []);
+  }, [id]);
 
   if (!user) return null;
 
