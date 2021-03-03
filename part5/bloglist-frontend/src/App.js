@@ -7,8 +7,6 @@ import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Toggable from './components/Toggable';
-import Greeting from './components/Greeting';
-import Logout from './components/Logout';
 import Navbar from './components/Navbar';
 import Users from './components/Users';
 import UserView from './components/UserView';
@@ -34,8 +32,6 @@ const App = () => {
           <Router>
             <Navbar />
             <Notification />
-            <Greeting />
-            <Logout />
 
             <Switch>
               <Route path="/users/:id">
@@ -58,7 +54,6 @@ const App = () => {
         </>
       ) : (
         <>
-          <Greeting />
           <Notification />
           <LoginForm />
         </>
