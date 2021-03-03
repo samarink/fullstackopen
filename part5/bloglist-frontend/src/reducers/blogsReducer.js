@@ -2,15 +2,15 @@ import blogService from '../services/blogs';
 
 const reducer = (state = [], action) => {
   switch (action.type) {
-    case 'ADD':
+    case 'ADD_BLOG':
       return [...state, action.data];
-    case 'INIT':
+    case 'INIT_BLOGS':
       return action.data;
-    case 'LIKE':
+    case 'LIKE_BLOG':
       return state.map((blog) =>
         blog.id !== action.id ? blog : { ...blog, likes: blog.likes + 1 }
       );
-    case 'DELETE':
+    case 'DELETE_BLOG':
       return state.filter((blog) => blog.id !== action.id);
     default:
       return state;
@@ -19,22 +19,22 @@ const reducer = (state = [], action) => {
 
 export const blogsInit = () => async (dispatch) => {
   const blogs = await blogService.getAll();
-  dispatch({ type: 'INIT', data: blogs });
+  dispatch({ type: 'INIT_BLOGS', data: blogs });
 };
 
 export const blogAdd = (object) => async (dispatch) => {
   const blog = await blogService.create(object);
-  dispatch({ type: 'ADD', data: blog });
+  dispatch({ type: 'ADD_BLOG', data: blog });
 };
 
 export const blogLike = (object) => async (dispatch) => {
   const blog = await blogService.update(object);
-  dispatch({ type: 'LIKE', id: blog.id });
+  dispatch({ type: 'LIKE_BLOG', id: blog.id });
 };
 
 export const blogDelete = (object) => async (dispatch) => {
   await blogService.remove(object);
-  dispatch({ type: 'DELETE', id: object.id });
+  dispatch({ type: 'DELETE_BLOG', id: object.id });
 };
 
 export default reducer;

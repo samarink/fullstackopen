@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { blogAdd } from '../reducers/blogsReducer';
 import { notificationSet } from '../reducers/notificationReducer';
 
-const BlogForm = ({ user }) => {
+const BlogForm = () => {
+  const user = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState('');

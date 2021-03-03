@@ -1,6 +1,6 @@
 const reducer = (state = null, action) => {
   switch (action.type) {
-    case 'SET':
+    case 'SET_NOTIFICATION':
       return action.notification;
     default:
       return state;
@@ -8,7 +8,7 @@ const reducer = (state = null, action) => {
 };
 
 export const notificationSet = (notification) => ({
-  type: 'SET',
+  type: 'SET_NOTIFICATION',
   notification,
 });
 
