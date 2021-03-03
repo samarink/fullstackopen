@@ -7,7 +7,7 @@ const Users = () => {
 
   useEffect(() => {
     usersService.getAll().then((users) => setUsers(users));
-  });
+  }, []);
 
   return (
     <div>

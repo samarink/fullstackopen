@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom';
 import React from 'react';
 
 const User = ({ user }) => (
   <li>
-    {user.username} created {user.blogs.length} blogs
+    <Link to={`/users/${user.id}`}>{user.name}</Link> created{' '}
+    {user.blogs.length} blogs
   </li>
 );
 

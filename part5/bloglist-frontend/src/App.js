@@ -11,6 +11,7 @@ import Greeting from './components/Greeting';
 import Logout from './components/Logout';
 import Navbar from './components/Navbar';
 import Users from './components/Users';
+import UserView from './components/UserView';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,9 @@ const App = () => {
             <Logout />
 
             <Switch>
+              <Route path="/users/:id">
+                <UserView />
+              </Route>
               <Route path="/users">
                 <Users />
               </Route>
