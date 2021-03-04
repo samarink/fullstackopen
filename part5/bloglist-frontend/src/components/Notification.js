@@ -1,19 +1,12 @@
 import React from 'react';
+import Alert from '@material-ui/lab/Alert';
 import { useSelector } from 'react-redux';
-
-const messageStyle = {
-  color: 'red',
-};
 
 const Notification = () => {
   const message = useSelector((state) => state.notification);
   if (!message) return null;
 
-  return (
-    <div style={messageStyle} className="error">
-      {message}
-    </div>
-  );
+  return <Alert severity="success">{message}</Alert>;
 };
 
 export default Notification;

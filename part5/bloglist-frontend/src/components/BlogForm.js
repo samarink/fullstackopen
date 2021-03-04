@@ -1,10 +1,25 @@
 import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { blogAdd } from '../reducers/blogsReducer';
 import { notificationSet } from '../reducers/notificationReducer';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: 300,
+    },
+  },
+}));
+
 const BlogForm = () => {
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState('');
@@ -26,13 +41,14 @@ const BlogForm = () => {
     setUrl('');
   };
 
+  const classes = useStyles();
   return (
     <>
       <h2>Create new</h2>
-      <form id="formDiv" onSubmit={handleSubmit}>
+      <form id="formDiv" onSubmit={handleSubmit} className={classes.root}>
         <div>
-          title
-          <input
+          <TextField
+            label="title"
             id="title"
             type="text"
             value={title}
@@ -41,8 +57,8 @@ const BlogForm = () => {
           />
         </div>
         <div>
-          author
-          <input
+          <TextField
+            label="author"
             id="author"
             type="text"
             value={author}
@@ -51,8 +67,8 @@ const BlogForm = () => {
           />
         </div>
         <div>
-          url
-          <input
+          <TextField
+            label="url"
             id="url"
             type="text"
             value={url}
@@ -60,7 +76,9 @@ const BlogForm = () => {
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button type="submit">add blog</button>
+        <Button color="primary" type="submit">
+          add blog
+        </Button>
       </form>
     </>
   );

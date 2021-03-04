@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { authenticate } from './reducers/userReducer';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Container from '@material-ui/core/Container';
 import Blogs from './components/Blogs';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
@@ -26,7 +27,7 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <>
+    <Container>
       {user ? (
         <>
           <Router>
@@ -58,7 +59,7 @@ const App = () => {
           <LoginForm />
         </>
       )}
-    </>
+    </Container>
   );
 };
 
