@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 
 router.get('/', async (_, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
@@ -43,10 +44,12 @@ router.post('/', async (request, response) => {
 });
 
 router.get('/:id', async (request, response) => {
-  const blog = await Blog.findById(request.params.id).populate('user', {
-    username: 1,
-    name: 1,
-  });
+  const blog = await Blog.findById(request.params.id)
+    .populate('user', {
+      username: 1,
+      name: 1,
+    })
+    .populate('comments', { text: 1 });
 
   if (blog) {
     return response.json(blog);
@@ -83,6 +86,23 @@ router.put('/:id', async (request, response) => {
   );
 
   response.json(updatedBlog);
+});
+
+router.post('/:id/comments', async (request, response) => {
+  const { text } = request.body;
+
+  if (!text) return response.status(400).end();
+
+  const blog = await Blog.findById(request.params.id);
+
+  const comment = new Comment({ text, blog: blog._id });
+
+  const savedComment = await comment.save();
+
+  blog.comments = [...blog.comments, savedComment._id];
+  await blog.save();
+
+  response.status(201).json(savedComment);
 });
 
 module.exports = router;

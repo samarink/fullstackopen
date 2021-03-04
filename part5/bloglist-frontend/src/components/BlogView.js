@@ -9,6 +9,7 @@ const BlogView = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [blog, setBlog] = useState(null);
+  const [text, setText] = useState('');
 
   useEffect(() => {
     blogService.getById(id).then((blog) => setBlog(blog));
@@ -25,7 +26,14 @@ const BlogView = () => {
     return currentUser.id === blog.user.id;
   };
 
-  const { title, url, author, likes } = blog;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newComment = await blogService.addComment(blog.id, text);
+    setText('');
+    setBlog({ ...blog, comments: [...blog.comments, newComment] });
+  };
+
+  const { title, url, author, likes, comments } = blog;
 
   return (
     <div>
@@ -48,6 +56,23 @@ const BlogView = () => {
           delete
         </button>
       )}
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="comment">comment</label>
+        <div>
+          <textarea
+            id="comment"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          ></textarea>
+        </div>
+        <button>submit</button>
+      </form>
+      <h2>comments</h2>
+      <ul>
+        {comments.map((comment) => (
+          <li key={comment.id}>{comment.text}</li>
+        ))}
+      </ul>
     </div>
   );
 };
