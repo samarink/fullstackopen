@@ -1,5 +1,22 @@
 const { v1: uuid } = require('uuid');
 const { ApolloServer, gql } = require('apollo-server');
+const mongoose = require('mongoose');
+const Author = require('./models/author');
+const Book = require('./models/book');
+
+mongoose
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  })
+  .then(() => {
+    console.log('connected to MongoDB');
+  })
+  .catch((error) => {
+    console.log('error connection to MongoDB:', error.message);
+  });
 
 // {{{
 let authors = [
@@ -90,9 +107,9 @@ const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
-    id: ID!
+    author: Author!
     genres: [String!]!
+    id: ID!
   }
 
   type Author {
@@ -125,18 +142,8 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: (_, args) => {
-      let booksToReturn = args.author
-        ? books.filter((book) => book.author === args.author)
-        : books;
-
-      booksToReturn = args.genre
-        ? booksToReturn.filter((book) => book.genres.includes(args.genre))
-        : booksToReturn;
-
-      return booksToReturn;
-    },
-    allAuthors: () => authors,
+    //    allBooks: () => Author.find({}),
+    allAuthors: () => Author.find({}),
   },
   Author: {
     bookCount: (root) => {
@@ -144,18 +151,22 @@ const resolvers = {
     },
   },
   Mutation: {
-    addBook: (_, args) => {
+    addBook: async (_, args) => {
       const { title, author, published, genres } = args;
-      const authorExists = authors.find(({ name }) => name === author);
+      let authorObject = await Author.findOne({ name: author });
 
-      if (!authorExists) {
-        authors = [...authors, { name: author, born: null, id: uuid() }];
+      if (!authorObject) {
+        authorObject = await new Author({ name: author }).save();
       }
 
-      const newBook = { title, author, published, genres, id: uuid() };
-      books = [...books, newBook];
+      const newBook = new Book({
+        title,
+        author: authorObject._id,
+        published,
+        genres,
+      });
 
-      return newBook;
+      return newBook.save();
     },
     editAuthor: (_, args) => {
       const authorToEdit = authors.find((author) => author.name === args.name);
@@ -164,7 +175,9 @@ const resolvers = {
 
       const updatedAuthor = { ...authorToEdit, born: args.setBornTo };
 
-      authors = authors.map(author => author.id === updatedAuthor.id ? updatedAuthor : author);
+      authors = authors.map((author) =>
+        author.id === updatedAuthor.id ? updatedAuthor : author
+      );
 
       return updatedAuthor;
     },
