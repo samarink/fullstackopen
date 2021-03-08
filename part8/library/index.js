@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer, gql, UserInputError } = require('apollo-server');
 const mongoose = require('mongoose');
 const Author = require('./models/author');
 const Book = require('./models/book');
@@ -82,26 +82,46 @@ const resolvers = {
       let authorObject = await Author.findOne({ name: author });
 
       if (!authorObject) {
-        authorObject = await new Author({ name: author }).save();
+        try {
+          authorObject = await new Author({ name: author }).save();
+        } catch (err) {
+          throw new UserInputError(err.message, { invalidArgs: args });
+        }
       }
 
-      const newBook = new Book({
+      const book = new Book({
         title,
         author: authorObject._id,
         published,
         genres,
       });
 
-      return newBook.save();
+      try {
+        await book.save();
+      } catch (err) {
+        throw new UserInputError(err.message, { invalidArgs: args });
+      }
+
+      return book;
     },
     editAuthor: async (_, args) => {
       const author = await Author.findOne({ name: args.name });
 
       if (!author) return null;
 
-      author.born = Number(args.setBornTo);
+      const setBornTo = Number(args.setBornTo);
 
-      return author.save();
+      if (isNaN(setBornTo))
+        return UserInputError('not valid number', { invalidArgs: args });
+      author.born = setBornTo;
+
+      try {
+        author.save();
+      } catch (err) {
+        throw new UserInputError(err.message, { invalidArgs: args });
+      }
+
+      return author;
     },
   },
 };
