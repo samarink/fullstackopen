@@ -167,13 +167,10 @@ const resolvers = {
       if (!user || password !== 'secret')
         throw new UserInputError('wrong credentials');
 
-      console.log(user);
       const userForToken = {
         username: user.username,
         id: user._id,
       };
-
-      console.log(userForToken);
 
       return { value: jwt.sign(userForToken, JWT_SECRET) };
     },
