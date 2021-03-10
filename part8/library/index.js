@@ -177,6 +177,12 @@ const resolvers = {
   },
 };
 
+const logger = {
+  requestDidStart(requestContext) {
+    console.log('Request started! Query:\n' + requestContext.request.query);
+  },
+};
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -190,6 +196,7 @@ const server = new ApolloServer({
       return { currentUser };
     }
   },
+  plugins: [logger]
 });
 
 server.listen().then(({ url }) => {
