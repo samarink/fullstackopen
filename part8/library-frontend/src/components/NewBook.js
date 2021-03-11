@@ -1,28 +1,17 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { ADD_BOOK, ALL_BOOKS } from '../queries';
+import { ADD_BOOK } from '../queries';
 
-const NewBook = (props) => {
+const NewBook = ({ show }) => {
   const [title, setTitle] = useState('');
   const [author, setAuhtor] = useState('');
   const [published, setPublished] = useState('');
   const [genre, setGenre] = useState('');
   const [genres, setGenres] = useState([]);
 
-  const [addBook] = useMutation(ADD_BOOK, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_BOOKS });
-      store.writeQuery({
-        query: ALL_BOOKS,
-        data: {
-          ...dataInStore,
-          allPersons: [...dataInStore.allBooks, response.data.addBook],
-        },
-      });
-    },
-  });
+  const [addBook] = useMutation(ADD_BOOK);
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
 

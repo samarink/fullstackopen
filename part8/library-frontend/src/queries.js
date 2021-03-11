@@ -1,64 +1,44 @@
 import { gql } from '@apollo/client';
 
-export const LOGIN = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      value
-    }
-  }
-`;
-
-export const GET_USER = gql`
-  query {
-    me {
-      id
-      username
-      favoriteGenre
-    }
-  }
-`;
-
-export const ALL_AUTHORS = gql`
-  query {
-    allAuthors {
+const BOOK_DETAILS = gql`
+  fragment BookDetails on Book {
+    id
+    title
+    published
+    author {
       id
       name
       born
-      bookCount
+    }
+    genres
+  }
+`;
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
     }
   }
+  ${BOOK_DETAILS}
+`;
+
+export const ALL_BOOKS = gql`
+  {
+    allBooks {
+      ...BookDetails
+    }
+  }
+  ${BOOK_DETAILS}
 `;
 
 export const BOOKS_BY_GENRE = gql`
   query byGenre($genre: String!) {
     allBooks(genre: $genre) {
-      title
-      published
-      author {
-        id
-        name
-        born
-      }
-      id
-      genres
+      ...BookDetails
     }
   }
-`;
-
-export const ALL_BOOKS = gql`
-  query {
-    allBooks {
-      title
-      published
-      author {
-        id
-        name
-        born
-      }
-      id
-      genres
-    }
-  }
+  ${BOOK_DETAILS}
 `;
 
 export const ADD_BOOK = gql`
@@ -74,15 +54,19 @@ export const ADD_BOOK = gql`
       published: $published
       genres: $genres
     ) {
-      title
-      author {
-        id
-        name
-        born
-      }
-      published
-      genres
+      ...BookDetails
+    }
+  }
+  ${BOOK_DETAILS}
+`;
+
+export const ALL_AUTHORS = gql`
+  query {
+    allAuthors {
       id
+      name
+      born
+      bookCount
     }
   }
 `;
@@ -94,6 +78,24 @@ export const EDIT_AUTHOR = gql`
       born
       id
       bookCount
+    }
+  }
+`;
+
+export const LOGIN = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`;
+
+export const GET_USER = gql`
+  query {
+    me {
+      id
+      username
+      favoriteGenre
     }
   }
 `;
