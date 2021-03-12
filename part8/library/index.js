@@ -99,7 +99,7 @@ const resolvers = {
   },
   Author: {
     bookCount: (root) => {
-      return Book.find({ author: root._id }).count();
+      return root.books.length;
     },
   },
   Book: {
@@ -134,6 +134,9 @@ const resolvers = {
       } catch (err) {
         throw new UserInputError(err.message, { invalidArgs: args });
       }
+
+      authorObject.books = [...authorObject.books, book._id];
+      await authorObject.save();
 
       pubsub.publish('BOOK_ADDED', { bookAdded: book });
 
