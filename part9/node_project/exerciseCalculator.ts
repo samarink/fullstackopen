@@ -13,10 +13,10 @@ interface RatingSummary {
   average: number;
 }
 
-const parseArgs = (args: Array<string>): ExerciseValues => {
-  if (args.length < 3) throw new Error('Not enough arguments');
+export const parseArgs = (args: Array<string>): ExerciseValues => {
+  if (typeof args === 'undefined') throw new Error('Not enough arguments');
 
-  const numArgs = args.slice(2).map((arg) => Number(arg));
+  const numArgs = args.map((arg) => Number(arg));
   const filtered = numArgs.filter((hour) => !isNaN(hour));
 
   if (numArgs.length !== filtered.length) {
@@ -29,7 +29,7 @@ const parseArgs = (args: Array<string>): ExerciseValues => {
   }
 };
 
-const calculateExercises = (
+export const calculateExercises = (
   hours: Array<number>,
   target: number
 ): RatingSummary => {
@@ -48,17 +48,3 @@ const calculateExercises = (
     average,
   };
 };
-
-// https://github.com/palantir/tslint/issues/3010
-const isNodeError = (error: Error): error is NodeJS.ErrnoException =>
-  error instanceof Error;
-
-try {
-  const { target, hours } = parseArgs(process.argv);
-  console.log(calculateExercises(hours, target));
-} catch (e) {
-  if (isNodeError(e) && e.code === 'ENOENT') {
-    console.log('Error, something bad happened, message: ', e.message);
-  }
-}
-
