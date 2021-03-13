@@ -19,7 +19,6 @@ const parseArgs = (args: Array<string>): ExerciseValues => {
   const numArgs = args.slice(2).map((arg) => Number(arg));
   const filtered = numArgs.filter((hour) => !isNaN(hour));
 
-  console.log(numArgs, filtered)
   if (numArgs.length !== filtered.length) {
     throw new Error('Provided arguments were not numbers');
   } else {
@@ -50,9 +49,16 @@ const calculateExercises = (
   };
 };
 
+// https://github.com/palantir/tslint/issues/3010
+const isNodeError = (error: Error): error is NodeJS.ErrnoException =>
+  error instanceof Error;
+
 try {
   const { target, hours } = parseArgs(process.argv);
   console.log(calculateExercises(hours, target));
 } catch (e) {
-  console.log('Error, something bad happened, message: ', e.message);
+  if (isNodeError(e) && e.code === 'ENOENT') {
+    console.log('Error, something bad happened, message: ', e.message);
+  }
 }
+
