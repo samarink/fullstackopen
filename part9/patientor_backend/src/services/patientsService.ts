@@ -1,4 +1,4 @@
-import patientsEntries from '../data/patients';
+import patientsEntries from '../../data/patients';
 import { NonSensetivePatientEntry } from '../types';
 
 const getNonSensetiveEntries = (): NonSensetivePatientEntry[] => {

@@ -1,4 +1,4 @@
-import { DiagnoseEntry } from '../types';
+import { DiagnoseEntry } from '../src/types';
 
 const diagnosesEntries: Array<DiagnoseEntry> = [
   {
