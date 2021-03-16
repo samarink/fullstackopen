@@ -1,22 +1,13 @@
 import React from 'react';
+import Part from './Part';
+import { CoursePart } from '../App';
 
-interface CoursePart {
-  name: string;
-  exerciseCount: number;
-}
-
-interface CourseProps {
-  courseParts: CoursePart[];
-}
-
-const Parts = ({ courseParts }: CourseProps) => (
-  <ul>
-    {courseParts.map(({ name, exerciseCount }) => (
-      <li key={name}>
-        {name} {exerciseCount}
-      </li>
+const Parts = ({ courseParts }: { courseParts: CoursePart[] }) => (
+  <>
+    {courseParts.map((part) => (
+      <Part key={part.name} part={part} />
     ))}
-  </ul>
+  </>
 );
 
 export default Parts;
