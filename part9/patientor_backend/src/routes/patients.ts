@@ -1,11 +1,11 @@
 import express from 'express';
 import patientsService from '../services/patientsService';
-import { toNewPatientEntry } from '../utils';
+import { toNewPatient } from '../utils';
 
 const router = express.Router();
 
 router.get('/', (_, res) => {
-  res.json(patientsService.getNonSensetiveEntries());
+  res.json(patientsService.getAll());
 });
 
 router.get('/:id', (req, res) => {
@@ -20,8 +20,8 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   try {
-    const newPatientEntry = toNewPatientEntry(req.body);
-    const addedEntry = patientsService.addPatient(newPatientEntry);
+    const newPatient = toNewPatient(req.body);
+    const addedEntry = patientsService.create(newPatient);
 
     res.json(addedEntry);
   } catch (error) {
