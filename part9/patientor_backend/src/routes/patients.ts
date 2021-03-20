@@ -1,6 +1,6 @@
 import express from 'express';
 import patientsService from '../services/patientsService';
-import { toNewPatient } from '../utils';
+import { toNewPatient, toNewEntry } from '../utils';
 
 const router = express.Router();
 
@@ -18,12 +18,24 @@ router.get('/:id', (req, res) => {
   }
 });
 
+router.post('/:id/entries', (req, res) => {
+  try {
+    const newEntry = toNewEntry(req.body);
+    const addedEntry = patientsService.addEntry(req.params.id, newEntry);
+
+    res.json(addedEntry);
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    res.status(400).json({ error: error.message });
+  }
+});
+
 router.post('/', (req, res) => {
   try {
     const newPatient = toNewPatient(req.body);
-    const addedEntry = patientsService.create(newPatient);
+    const addedPatient = patientsService.create(newPatient);
 
-    res.json(addedEntry);
+    res.json(addedPatient);
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     res.status(400).json({ error: error.message });
