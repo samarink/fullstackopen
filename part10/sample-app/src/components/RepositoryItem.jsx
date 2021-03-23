@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text, View, Image, StyleSheet } from 'react-native';
-import theme from './theme';
+import { View, Image, StyleSheet } from 'react-native';
+import Text from './Text';
+import theme from '../theme';
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
+    padding: theme.paddings.large,
   },
   logo: {
     borderRadius: 5,
@@ -13,40 +14,28 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: theme.margins.medium,
   },
   headerTextContent: {
-    paddingLeft: 10,
+    paddingLeft: theme.paddings.medium,
     flexShrink: 1,
   },
   headerItem: {
-    marginBottom: 5,
-  },
-  headerTitle: {
-    fontSize: theme.fontSizes.subheading,
-    fontWeight: theme.fontWeights.bold,
-  },
-  headerDescription: {
-    color: theme.colors.textSecondary,
+    marginBottom: theme.margins.small,
   },
   headerLanguage: {
     backgroundColor: theme.colors.primary,
     color: theme.colors.white,
-    padding: 5,
+    padding: theme.paddings.small,
     borderRadius: 4,
     alignSelf: 'flex-start',
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
-  statsHeader: {
-    fontWeight: theme.fontWeights.bold,
-    textAlign: 'center',
-  },
-  statsDescription: {
-    color: theme.colors.textSecondary,
+  statsItem: {
     textAlign: 'center',
   },
 });
@@ -70,10 +59,14 @@ const RepositoryItem = ({
       <View style={styles.headerContainer}>
         <Image style={styles.logo} source={{ uri }} />
         <View style={styles.headerTextContent}>
-          <Text style={[styles.headerTitle, styles.headerItem]}>
+          <Text
+            fontWeight="bold"
+            fontSize="subheading"
+            style={styles.headerItem}
+          >
             {fullName}
           </Text>
-          <Text style={[styles.headerDescription, styles.headerItem]}>
+          <Text color="textSecondary" style={styles.headerItem}>
             {description}
           </Text>
           <Text style={[styles.headerLanguage, styles.headerItem]}>
@@ -83,20 +76,28 @@ const RepositoryItem = ({
       </View>
       <View style={styles.statsContainer}>
         <View>
-          <Text style={styles.statsHeader}>{formatCount(stargazersCount)}</Text>
-          <Text style={styles.statsDescription}>Stars</Text>
+          <Text fontWeight="bold" style={styles.statsItem}>
+            {formatCount(stargazersCount)}
+          </Text>
+          <Text color="textSecondary">Stars</Text>
         </View>
         <View>
-          <Text style={styles.statsHeader}>{formatCount(forksCount)}</Text>
-          <Text style={styles.statsDescription}>Forks</Text>
+          <Text fontWeight="bold" style={styles.statsItem}>
+            {formatCount(forksCount)}
+          </Text>
+          <Text color="textSecondary">Forks</Text>
         </View>
         <View>
-          <Text style={styles.statsHeader}>{formatCount(reviewCount)}</Text>
-          <Text style={styles.statsDescription}>Reviews</Text>
+          <Text fontWeight="bold" style={styles.statsItem}>
+            {formatCount(reviewCount)}
+          </Text>
+          <Text color="textSecondary">Reviews</Text>
         </View>
         <View>
-          <Text style={styles.statsHeader}>{formatCount(ratingAverage)}</Text>
-          <Text style={styles.statsDescription}>Rating</Text>
+          <Text fontWeight="bold" style={styles.statsItem}>
+            {formatCount(ratingAverage)}
+          </Text>
+          <Text color="textSecondary">Rating</Text>
         </View>
       </View>
     </View>
