@@ -4,6 +4,9 @@ import { Link } from 'react-router-native';
 import theme from './theme';
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+  },
   text: {
     color: theme.colors.white,
     fontSize: theme.fontSizes.subheading,
@@ -13,7 +16,7 @@ const styles = StyleSheet.create({
 
 const AppBarTab = ({ title, to }) => {
   return (
-    <Pressable>
+    <Pressable style={styles.container}>
       <Link to={to}>
         <Text style={styles.text}>{title}</Text>
       </Link>
