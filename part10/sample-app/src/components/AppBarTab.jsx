@@ -1,20 +1,22 @@
 import React from 'react';
-import { Pressable, Text } from 'react-native';
-import { StyleSheet } from 'react-native';
+import { Pressable, Text, StyleSheet } from 'react-native';
+import { Link } from 'react-router-native';
 import theme from './theme';
 
 const styles = StyleSheet.create({
   text: {
     color: theme.colors.white,
     fontSize: theme.fontSizes.subheading,
-    fontWeight: theme.fontWeights.bold
+    fontWeight: theme.fontWeights.bold,
   },
 });
 
-const AppBarTab = ({ title }) => {
+const AppBarTab = ({ title, to }) => {
   return (
     <Pressable>
-      <Text style={styles.text}>{title}</Text>
+      <Link to={to}>
+        <Text style={styles.text}>{title}</Text>
+      </Link>
     </Pressable>
   );
 };
