@@ -23,7 +23,7 @@ const Main = () => {
         <Route path="/signin">
           <SignIn />
         </Route>
-        <Redirect to="/" />
+        <Redirect to="/signin" />
       </Switch>
     </View>
   );
