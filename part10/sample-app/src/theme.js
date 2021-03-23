@@ -7,6 +7,7 @@ const theme = {
     lightgray: '#e1e2e3',
     backgroundPrimary: '#24292e',
     backgroundSecondary: '#dbdbdb',
+    error: '#d73a4a'
   },
   fontSizes: {
     body: 14,
