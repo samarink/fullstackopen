@@ -1,17 +1,15 @@
 {
-  "plugins": ["react", "node"],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "plugins": ["react", "jest"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:jest/recommended"
+  ],
   "parser": "babel-eslint",
   "env": {
     "browser": true
   },
   "rules": {
-    "react/prop-types": "off",
-    "semi": "error"
+    "react/prop-types": "off"
   }
 }
