@@ -27,3 +27,10 @@ export const REVIEW_DETAILS = gql`
     }
   }
 `;
+
+export const USER_DETAILS = gql`
+  fragment UserDetails on User {
+    id
+    username
+  }
+`;

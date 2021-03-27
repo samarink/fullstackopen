@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 import AppBarTab from './AppBarTab';
@@ -33,7 +33,10 @@ const AppBar = () => {
             <AppBarTab title="Sign Out" onPress={() => signOut()} />
           </>
         ) : (
-          <AppBarTab title="Sign In" to="/signin" />
+          <>
+            <AppBarTab title="Sign In" to="/signin" />
+            <AppBarTab title="Sign Up" to="/signup" />
+          </>
         )}
       </ScrollView>
     </View>
