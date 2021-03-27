@@ -75,7 +75,7 @@ const RepositoryItem = ({
   };
 
   return (
-    <Link to={id}>
+    <Link to={`/repository/${id}`}>
       <View testID="RepositoryItem" style={styles.container}>
         <View style={styles.headerContainer}>
           <Image style={styles.logo} source={{ uri }} />

@@ -11,6 +11,7 @@ const RepositoryView = () => {
   const [repository, setRepository] = useState(null);
   const { id } = useParams();
   const { data } = useQuery(GET_REPOSITORY_WITH_ID, {
+    fetchPolicy: 'cache-and-network',
     variables: { id },
   });
 
