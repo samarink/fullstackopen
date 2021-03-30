@@ -34,3 +34,12 @@ export const USER_DETAILS = gql`
     username
   }
 `;
+
+export const PAGE_DETAILS = gql`
+  fragment PageDetails on PageInfo {
+    hasPreviousPage
+    hasNextPage
+    startCursor
+    endCursor
+  }
+`;

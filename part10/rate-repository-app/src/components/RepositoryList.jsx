@@ -40,11 +40,11 @@ const RepositoryList = () => {
       <Picker selectedValue={variables} onValueChange={onValueChange}>
         <Picker.Item
           label="Latest repositories"
-          value='{ "orderBy": "CREATED_AT" }'
+          value='{ "orderBy": "CREATED_AT", "orderDirection": "DESC" }'
         />
         <Picker.Item
           label="Highest rated repositories"
-          value='{ "orderBy": "RATING_AVERAGE" }'
+          value='{ "orderBy": "RATING_AVERAGE", "orderDirection": "DESC" }'
         />
         <Picker.Item
           label="Lowest rated repositories"
