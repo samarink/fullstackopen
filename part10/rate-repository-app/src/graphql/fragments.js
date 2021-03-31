@@ -21,6 +21,9 @@ export const REVIEW_DETAILS = gql`
     text
     rating
     createdAt
+    repository {
+      id
+    }
     user {
       id
       username

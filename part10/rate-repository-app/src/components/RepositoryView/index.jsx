@@ -3,7 +3,7 @@ import { FlatList } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-native';
 import RepositoryInfo from './RepositoryInfo';
-import ReviewItem from './ReviewItem';
+import ReviewItem from '../ReviewItem';
 import ItemSeparator from '../ItemSeparator';
 import { GET_REPOSITORY_WITH_ID } from '../../graphql/queries';
 
